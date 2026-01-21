@@ -6,6 +6,11 @@ use std::{env, sync::Arc};
 use sqlx::postgres::PgPoolOptions;
 use dog::{DogRepository, DogService, dog_router};
 
+mod breed;
+use breed::{breed_router};
+
+use crate::breed::{BreedRepository, BreedService};
+
 #[tokio::main]
 async fn main() {
    
@@ -26,17 +31,24 @@ async fn main() {
         .await
         .expect("Migration failed");
 
-    // 4. Create repository and service
-    let repository = Arc::new(DogRepository::new(pool));
+    // 4. Create shared pool
+    let pool = Arc::new(pool);
+
+    // 5. Create repository and service
+    let repository = DogRepository::new(Arc::clone(&pool));
     let service = Arc::new(DogService::new(repository));
 
-    // 5. Create main router
+    let breed_repository = BreedRepository::new(Arc::clone(&pool));
+    let breed_service = Arc::new(BreedService::new(breed_repository));
+
+    // 6. Create main router
     let app = Router::new()
         .route("/", get(root))
         .route("/health", get(health_check))
-        .nest("/api/dogs", dog_router(service));
+        .nest("/api/dogs", dog_router(service))
+        .nest("/api/breeds", breed_router(breed_service));
 
-    // 6. Start server
+    // 7. Start server
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8000")
         .await
         .unwrap();
