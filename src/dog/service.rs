@@ -1,4 +1,3 @@
-use std::sync::Arc;
 use sqlx::Error;
 use super::{
     model::{Dog, DogPayload, DogPatchPayload},
@@ -6,11 +5,11 @@ use super::{
 };
 
 pub struct DogService {
-    repository: Arc<DogRepository>,
+    repository: DogRepository,
 }
 
 impl DogService {
-    pub fn new(repository: Arc<DogRepository>) -> Self {
+    pub fn new(repository: DogRepository) -> Self {
         Self { repository }
     }
 

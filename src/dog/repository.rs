@@ -1,25 +1,27 @@
+use std::sync::Arc;
+
 use sqlx::{PgPool, Error};
 use super::model::{Dog, DogPayload, DogPatchPayload};
 
 pub struct DogRepository {
-    pool: PgPool,
+    pool: Arc<PgPool>,
 }
 
 impl DogRepository {
-    pub fn new(pool: PgPool) -> Self {
+    pub fn new(pool: Arc<PgPool>) -> Self {
         Self { pool }
     }
 
     pub async fn find_all(&self) -> Result<Vec<Dog>, Error> {
         sqlx::query_as::<_, Dog>("SELECT * FROM dogs ORDER BY id")
-            .fetch_all(&self.pool)
+            .fetch_all(&*self.pool)
             .await
     }
 
     pub async fn find_by_id(&self, id: i32) -> Result<Option<Dog>, Error> {
         sqlx::query_as::<_, Dog>("SELECT * FROM dogs WHERE id = $1")
             .bind(id)
-            .fetch_optional(&self.pool)
+            .fetch_optional(&*self.pool)
             .await
     }
 
@@ -29,7 +31,7 @@ impl DogRepository {
         )
         .bind(&payload.name)
         .bind(payload.age)
-        .fetch_one(&self.pool)
+        .fetch_one(&*self.pool)
         .await
     }
 
@@ -40,7 +42,7 @@ impl DogRepository {
         .bind(&payload.name)
         .bind(payload.age)
         .bind(id)
-        .fetch_one(&self.pool)
+        .fetch_one(&*self.pool)
             .await
     }
 
@@ -56,14 +58,14 @@ impl DogRepository {
         .bind(name)
         .bind(age)
         .bind(id)
-        .fetch_one(&self.pool)
+        .fetch_one(&*self.pool)
         .await
     }
 
     pub async fn delete(&self, id: i32) -> Result<bool, Error> {
         let result = sqlx::query("DELETE FROM dogs WHERE id = $1")
             .bind(id)
-            .execute(&self.pool)
+            .execute(&*self.pool)
             .await?;
         
         Ok(result.rows_affected() > 0)
