@@ -85,7 +85,7 @@ curl -X GET http://localhost:8000/health
 
 ### 1. List all dogs (GET /dogs)
 ```bash
-curl -X GET http://localhost:8000/dogs \
+curl -X GET http://localhost:8000/api/dogs \
   -H "Accept: application/json"
 ```
 
@@ -94,12 +94,12 @@ Optional pagination parameters:
 - `limit`: Items per page (default: 20)
 
 ```bash
-curl -X GET "http://localhost:8000/dogs?page=1&limit=10"
+curl -X GET "http://localhost:8000/api/dogs?page=1&limit=10"
 ```
 
 ### 2. Create a dog (POST /dogs)
 ```bash
-curl -X POST http://localhost:8000/dogs \
+curl -X POST http://localhost:8000/api/dogs \
   -H "Content-Type: application/json" \
   -d '{"name":"Fido","age":3}'
 ```
@@ -115,7 +115,7 @@ curl -X POST http://localhost:8000/dogs \
 
 ### 3. Get a dog by ID (GET /dogs/{id})
 ```bash
-curl -X GET http://localhost:8000/dogs/1 \
+curl -X GET http://localhost:8000/api/dogs/1 \
   -H "Accept: application/json"
 ```
 
@@ -128,7 +128,7 @@ curl -X GET http://localhost:8000/dogs/1 \
 
 ### 4. Full update a dog (PUT /dogs/{id})
 ```bash
-curl -X PUT http://localhost:8000/dogs/1 \
+curl -X PUT http://localhost:8000/api/dogs/1 \
   -H "Content-Type: application/json" \
   -d '{"name":"Fido Updated","age":4}'
 ```
@@ -142,7 +142,7 @@ curl -X PUT http://localhost:8000/dogs/1 \
 
 ### 5. Partial update a dog (PATCH /dogs/{id})
 ```bash
-curl -X PATCH http://localhost:8000/dogs/1 \
+curl -X PATCH http://localhost:8000/api/dogs/1 \
   -H "Content-Type: application/json" \
   -d '{"name":"Fido Patched"}'
 ```
@@ -156,12 +156,26 @@ curl -X PATCH http://localhost:8000/dogs/1 \
 
 ### 6. Delete a dog (DELETE /dogs/{id})
 ```bash
-curl -X DELETE http://localhost:8000/dogs/2
+curl -X DELETE http://localhost:8000/api/dogs/2
 ```
 
 **Responses:**
 - **204 No Content:** If deleted successfully
 - **404 Not Found:** If ID doesn't exist
+
+### 7. List all breeds (GET /breeds)
+```bash
+curl -X GET http://localhost:8000/api/breeds \
+  -H "Accept: application/json"
+```
+
+### 8. Create a breed (POST /breeds)
+```bash
+curl -X POST http://localhost:8000/api/breeds \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Pitbull"}'
+```
+
 
 ## Error Handling
 
