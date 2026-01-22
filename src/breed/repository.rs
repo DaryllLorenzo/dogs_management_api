@@ -26,4 +26,14 @@ impl BreedRepository {
         .fetch_one(&*self.pool)
         .await
     }
+
+    pub async fn update(&self, id: i32, payload: &BreedPayload) -> Result<Breed, Error> {
+        sqlx::query_as::<_, Breed>(
+            "UPDATE breeds SET name = $1 WHERE id = $2 RETURNING *"
+        )
+        .bind(&payload.name)
+        .bind(id)
+        .fetch_one(&*self.pool)
+        .await
+    }
 }

@@ -29,4 +29,10 @@ impl BreedService {
             .map_err(|e| e.to_string())
     }
 
+    pub async fn update_breed(&self, id:i32, payload: BreedPayload) -> Result<Breed, String>{
+        self.repository.update(id, &payload)
+        .await
+        .map_err(|e| e.to_string())
+    }
+
 }
