@@ -176,6 +176,13 @@ curl -X POST http://localhost:8000/api/breeds \
   -d '{"name":"Pitbull"}'
 ```
 
+### 9. Full update a breed (PUT /breeds/{id})
+```bash
+curl -X PUT http://localhost:8000/api/breeds/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Bulldog"}'
+```
+
 
 ## Error Handling
 
