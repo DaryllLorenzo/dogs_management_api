@@ -182,7 +182,11 @@ curl -X PUT http://localhost:8000/api/breeds/1 \
   -H "Content-Type: application/json" \
   -d '{"name":"Bulldog"}'
 ```
-
+### 10. Get a breed by ID (GET /breeds/{id})
+```bash
+curl -X GET http://localhost:8000/api/breeds/1 \
+  -H "Accept: application/json"
+```
 
 ## Error Handling
 
