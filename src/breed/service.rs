@@ -13,6 +13,13 @@ impl BreedService {
         Self { repository }
     }
 
+    pub async fn get_breed(&self, id: i32) -> Result<Breed, Error> {
+        let breed = self.repository.find_by_id(id)
+        .await?;
+        
+        Ok(breed)
+    }
+
     pub async fn list_breeds(&self) -> Result<Vec<Breed>, Error> {
         let breeds = self.repository.find_all().await?;
         

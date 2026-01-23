@@ -12,6 +12,13 @@ impl BreedRepository {
         Self { pool }
     }
 
+    pub async fn find_by_id(&self, id: i32) -> Result<Breed, Error> {
+        sqlx::query_as::<_, Breed>("SELECT * FROM breeds WHERE id = $1")
+            .bind(id)
+            .fetch_one(&*self.pool)
+            .await
+    }
+
     pub async fn find_all(&self) -> Result<Vec<Breed>, Error> {
         sqlx::query_as::<_, Breed>("SELECT * FROM breeds ORDER BY id")
             .fetch_all(&*self.pool)

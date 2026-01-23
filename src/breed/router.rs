@@ -1,5 +1,5 @@
 use axum::{
-    Json, Router, extract::{Path, State}, http::StatusCode, routing::{get, post, put}
+    Json, Router, extract::{Path, State}, http::StatusCode, routing::{post, put}
 };
 use std::sync::Arc;
 
@@ -12,8 +12,8 @@ pub fn breed_router(service: Arc<BreedService>) -> Router {
     Router::new()
     .route("/", post(create_breed).get(list_breeds))
     .route("/{id}",
-    put(update_breed))
-    //    .get(get_breed)
+    put(update_breed)
+    .get(get_breed))
     //    .delete(delete_breed)
     //)
     .with_state(service)
@@ -55,3 +55,12 @@ async fn update_breed(
     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
 }
 
+async fn get_breed(
+    State(service): State<Arc<BreedService>>,
+    Path(id): Path<i32>
+) -> Result<Json<Breed>, StatusCode>{
+    service.get_breed(id)
+    .await
+    .map(|breed| Json(breed))
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+}
