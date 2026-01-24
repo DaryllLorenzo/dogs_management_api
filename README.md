@@ -187,6 +187,15 @@ curl -X PUT http://localhost:8000/api/breeds/1 \
 curl -X GET http://localhost:8000/api/breeds/1 \
   -H "Accept: application/json"
 ```
+### 11. Delete a breed (DELETE /breeds/{id})
+```bash
+curl -X DELETE http://localhost:8000/api/breeds/2
+```
+
+**Responses:**
+- **204 No Content:** If deleted successfully
+- **404 Not Found:** If ID doesn't exist
+
 
 ## Error Handling
 
