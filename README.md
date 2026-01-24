@@ -192,6 +192,12 @@ curl -X GET http://localhost:8000/api/breeds/1 \
 curl -X DELETE http://localhost:8000/api/breeds/2
 ```
 
+### 12. List all dogs with bread (GET /dogs_with_breeds)
+```bash
+curl -X GET http://localhost:8000/api/dogs/dogs_with_breeds \
+  -H "Accept: application/json"
+```
+
 **Responses:**
 - **204 No Content:** If deleted successfully
 - **404 Not Found:** If ID doesn't exist
