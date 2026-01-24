@@ -13,9 +13,9 @@ pub fn breed_router(service: Arc<BreedService>) -> Router {
     .route("/", post(create_breed).get(list_breeds))
     .route("/{id}",
     put(update_breed)
-    .get(get_breed))
-    //    .delete(delete_breed)
-    //)
+    .get(get_breed)
+    .delete(delete_breed)
+    )
     .with_state(service)
 }
 
@@ -63,4 +63,20 @@ async fn get_breed(
     .await
     .map(|breed| Json(breed))
     .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+}
+
+async fn delete_breed(
+    State(service) : State<Arc<BreedService>>,
+    Path(id): Path<i32>
+) -> Result<StatusCode, StatusCode> {
+    service.delete_breed(id)
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR )
+    .and_then(|deleted|{
+        if deleted {
+            Ok(StatusCode::NO_CONTENT)
+        } else {
+            Err(StatusCode::NOT_FOUND)
+        }
+    })
 }

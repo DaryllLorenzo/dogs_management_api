@@ -42,4 +42,12 @@ impl BreedService {
         .map_err(|e| e.to_string())
     }
 
+    pub async fn delete_breed(&self, id: i32) -> Result<bool, String> {
+        let _ = self.get_breed(id).await;
+
+        self.repository.delete(id)
+        .await
+        .map_err(|e| e.to_string())
+    }
+
 }

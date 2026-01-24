@@ -43,4 +43,15 @@ impl BreedRepository {
         .fetch_one(&*self.pool)
         .await
     }
+
+    pub async fn delete(&self, id: i32) -> Result<bool, Error> {
+        let result = sqlx::query(
+            "DELETE FROM breeds WHERE id = $1"
+        )
+        .bind(id)
+        .execute(&*self.pool)
+        .await?;
+        
+        Ok(result.rows_affected() > 0)
+    }
 }
