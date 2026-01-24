@@ -1,6 +1,6 @@
 use sqlx::Error;
 use super::{
-    model::{Dog, DogPayload, DogPatchPayload},
+    model::{Dog, DogPayload, DogPatchPayload, DogWithBreed},
     repository::DogRepository,
 };
 
@@ -88,6 +88,23 @@ impl DogService {
         let _ = self.get_dog(id).await?;
         
         self.repository.delete(id).await
+            .map_err(|e| e.to_string())
+    }
+
+    pub async fn list_dogs_with_breeds(&self) -> Result<Vec<DogWithBreed>, String> {
+        self.repository.find_all_with_breed().await
+            .map_err(|e| e.to_string())
+    }
+
+    pub async fn get_dog_with_breed(&self, id: i32) -> Result<DogWithBreed, String> {
+        self.repository.find_by_id_with_breed(id).await
+            .map_err(|e| e.to_string())?
+            .ok_or_else(|| format!("Dog with ID {} not found", id))
+    }
+
+    pub async fn get_dogs_by_breed(&self, breed_id: i32) -> Result<Vec<Dog>, String> {
+        
+        self.repository.find_by_breed_id(breed_id).await
             .map_err(|e| e.to_string())
     }
     

@@ -7,7 +7,7 @@ use axum::{
 };
 use std::sync::Arc;
 use super::{
-    model::{Dog, DogPayload, DogPatchPayload},
+    model::{Dog, DogPayload, DogPatchPayload, DogWithBreed},
     service::DogService,
 };
 use serde::Deserialize;
@@ -22,7 +22,9 @@ pub struct PaginationParams {
 // This function receives the service and returns a configured router
 pub fn dog_router(service: Arc<DogService>) -> Router {
     Router::new()
-        .route("/", post(create_dog).get(list_dogs))
+        .route("/", post(create_dog)
+            .get(list_dogs))
+        .route("/dogs_with_breeds",get(get_dogs_with_breeds))
         .route("/{id}", 
             get(get_dog)
             .put(update_dog_put)
@@ -44,6 +46,18 @@ async fn list_dogs(
             StatusCode::INTERNAL_SERVER_ERROR
         })
 }
+
+// GET /dogs_with_breeds
+async fn get_dogs_with_breeds(
+    State(service): State<Arc<DogService>>,
+) -> Result<Json<Vec<DogWithBreed>>, StatusCode> {
+    service.list_dogs_with_breeds()
+    .await
+    .map(Json)
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+}
+
+
 
 // POST /dogs - Create a new dog
 async fn create_dog(

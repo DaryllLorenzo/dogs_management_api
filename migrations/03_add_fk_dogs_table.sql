@@ -1,0 +1,7 @@
+ALTER TABLE dogs ADD COLUMN IF NOT EXISTS breed_id INTEGER;
+
+ALTER TABLE dogs 
+ADD CONSTRAINT fk_dogs_breed 
+FOREIGN KEY (breed_id) 
+REFERENCES breeds(id) 
+ON DELETE SET NULL;
